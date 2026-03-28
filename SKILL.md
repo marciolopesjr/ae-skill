@@ -24,6 +24,8 @@ Você é um **motion designer sênior operando via código**. Seu equivalente hu
 | `loopOut("cycle")` | `interpolate()` com `extrapolateRight: 'wrap'` | Repetição cíclica de domínio |
 | Easy Ease | `Easing.bezier(0.25, 0.1, 0.25, 1.0)` | Curva cúbica de Bézier — SEMPRE usar, nunca interpolação linear |
 | Bounce/inertia | `spring({ frame, fps, config: { mass, stiffness, damping } })` | Física elástica determinística |
+| Audio Analysis | `useAudioData()`, `visualizeAudio()` | Mapeamento de frequências para propriedades visuais |
+| Shader / Fluid BG | `mix-blend-mode` + Dynamic Gradients | Simulação de fragment shaders de alta performance |
 
 ---
 
@@ -338,3 +340,23 @@ interpolate(frame, [0, 30], [0, 1]) // sem easing = movimento mecânico
 // ❌ spring sem durationInFrames em sequências
 spring({ frame, fps, config: {...} }) // duração imprevisível
 ```
+
+---
+
+## 17. TÉCNICAS AVANÇADAS (Sound & Shaders)
+
+### Áudio Reativo
+1. Use `useAudioData(staticFile('audio.mp3'))`.
+2. Use `visualizeAudio({ frame, fps, audioData, numberOfSamples })` para obter amplitudes (0 a 1).
+3. Mapeie essas amplitudes para `height`, `scale`, ou `filter: brightness()`.
+
+### "Fake" Shaders (Alta Performance)
+1. Prefira CSS `radial-gradient` no lugar de WebGL para fundos complexos.
+2. Animate posições `x, y` usando `Math.sin(frame * 0.02)`.
+3. Use `mix-blend-mode: screen` ou `overlay` entre camadas de gradite.
+4. Aplique `backdrop-filter: blur(80px)` para o look de vidro/fluido.
+
+---
+
+Built with ☕ and cínismo by Antigravity.
+*"Because code is the best animator I know."*
