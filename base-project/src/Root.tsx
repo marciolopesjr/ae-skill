@@ -9,6 +9,7 @@ import { MotionBlurScene } from './scenes/07_MotionBlurScene';
 import { ApplePromoScene } from './scenes/ApplePromoScene';
 import { ShaderDemoScene } from './scenes/ShaderDemoScene';
 import { AudioReactiveScene } from './scenes/AudioReactiveScene';
+import { ThreeDShowcaseScene } from './scenes/ThreeDShowcaseScene';
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -103,13 +104,22 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
 
+      <Composition
+        id="ThreeDShowcase"
+        component={ThreeDShowcaseScene}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+
       {/* 
         A Master Compilation (Emulando "Sequences") 
         1. Pre-comp / In-Out usando <Sequence from={N} durationInFrames={N}> 
       */}
       <Composition
         id="MasterShowcase"
-        durationInFrames={2040} // 600 + 300 + 300 + 120 + 120 + 90 + 300 + 300(loopOut override?) etc..
+        durationInFrames={2340} // Anterior + 300
         fps={30}
         width={1920}
         height={1080}
@@ -124,25 +134,28 @@ export const RemotionRoot: React.FC = () => {
             <Sequence from={900} durationInFrames={300}>
                <AudioReactiveScene />
             </Sequence>
-            <Sequence from={1200} durationInFrames={120}>
+            <Sequence from={1200} durationInFrames={300}>
+               <ThreeDShowcaseScene />
+            </Sequence>
+            <Sequence from={1500} durationInFrames={120}>
               <NullObjectScene />
             </Sequence>
-            <Sequence from={1320} durationInFrames={120}>
+            <Sequence from={1620} durationInFrames={120}>
               <TrackMatteScene />
             </Sequence>
-            <Sequence from={1440} durationInFrames={90}>
+            <Sequence from={1740} durationInFrames={90}>
               <KeyframesEaseScene />
             </Sequence>
-            <Sequence from={1530} durationInFrames={120}>
+            <Sequence from={1830} durationInFrames={120}>
               <WiggleScene />
             </Sequence>
-            <Sequence from={1650} durationInFrames={120}>
+            <Sequence from={1950} durationInFrames={120}>
               <LoopOutScene />
             </Sequence>
-            <Sequence from={1770} durationInFrames={90}>
+            <Sequence from={2070} durationInFrames={90}>
               <BounceSpringScene />
             </Sequence>
-            <Sequence from={1860} durationInFrames={120}>
+            <Sequence from={2160} durationInFrames={120}>
               <MotionBlurScene />
             </Sequence>
           </>
