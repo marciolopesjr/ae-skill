@@ -9,7 +9,7 @@ import { useAudioData, visualizeAudio } from '@remotion/media-utils';
 
 export const AudioReactiveScene: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps, width, height } = useVideoConfig();
+  const { fps } = useVideoConfig();
   
   // Áudio estático para teste (Coloque um arquivo audio.mp3 na pasta public)
   const audioSrc = staticFile('audio.mp3');
