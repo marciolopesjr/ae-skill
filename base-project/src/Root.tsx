@@ -11,7 +11,7 @@ export const RemotionRoot: React.FC = () => {
   return (
     <>
       <Composition
-        id="E01_NullObject"
+        id="E01-NullObject"
         component={NullObjectScene}
         durationInFrames={120}
         fps={30}
@@ -20,7 +20,7 @@ export const RemotionRoot: React.FC = () => {
       />
       
       <Composition
-        id="E02_TrackMatte"
+        id="E02-TrackMatte"
         component={TrackMatteScene}
         durationInFrames={120}
         fps={30}
@@ -29,7 +29,7 @@ export const RemotionRoot: React.FC = () => {
       />
 
       <Composition
-        id="E03_KeyframesEase"
+        id="E03-KeyframesEase"
         component={KeyframesEaseScene}
         durationInFrames={90}
         fps={30}
@@ -38,7 +38,7 @@ export const RemotionRoot: React.FC = () => {
       />
 
       <Composition
-        id="E04_Wiggle"
+        id="E04-Wiggle"
         component={WiggleScene}
         durationInFrames={300}
         fps={30}
@@ -47,7 +47,7 @@ export const RemotionRoot: React.FC = () => {
       />
 
       <Composition
-        id="E05_LoopOut"
+        id="E05-LoopOut"
         component={LoopOutScene}
         durationInFrames={300} // Cíclico
         fps={30}
@@ -56,7 +56,7 @@ export const RemotionRoot: React.FC = () => {
       />
 
       <Composition
-        id="E06_BounceSpring"
+        id="E06-BounceSpring"
         component={BounceSpringScene}
         durationInFrames={90}
         fps={30}
@@ -65,7 +65,7 @@ export const RemotionRoot: React.FC = () => {
       />
 
       <Composition
-        id="E07_MotionBlur"
+        id="E07-MotionBlur"
         component={MotionBlurScene}
         durationInFrames={120}
         fps={30}
