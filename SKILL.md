@@ -470,5 +470,5 @@ npx remotion render MasterShowcase out/video.mp4
 
 ---
 
-Built with ☕ and cínismo by Antigravity.
-*"Because code is the best animator I know."*
+Construído com café e cinismo por Antigravity.
+*"Porque código é o melhor animador que eu conheço."*

@@ -1,82 +1,83 @@
-# 🎬 AE Skill: The Autonomous Motion Design Standard
+# AE Skill: padrão autônomo de motion design
 
-[![Remotion](https://img.shields.io/badge/Powered%20by-Remotion-blue.svg)](https://remotion.dev)
-[![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue.svg)](https://www.typescriptlang.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Remotion](https://img.shields.io/badge/Feito%20com-Remotion-blue.svg)](https://remotion.dev)
+[![TypeScript](https://img.shields.io/badge/Linguagem-TypeScript-blue.svg)](https://www.typescriptlang.org/)
+[![Licença: MIT](https://img.shields.io/badge/Licen%C3%A7a-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **"Converting the artistry of After Effects into the precision of code."**
+> **"Convertendo a linguagem artística do After Effects na precisão do código."**
 
-This repository is a specialized **AI Skill** designed to instruct Large Language Models (LLMs) on how to build high-end motion design using **Remotion**. It bridges the gap between traditional video editing (After Effects) and deterministic, code-driven video engineering.
-
----
-
-## 🚀 The "Apple-Level" Experience
-
-We believe video should be as deployable as code. Our base project includes a promotional sequence that demonstrates all core motion principles with 12-sample motion blur and spring physics.
-
-### 🎥 Watch the Showcase
-- [**Full Skill Showcase (MP4)**](./base-project/out/full-showcase.mp4)
-- [**Apple-Style Promo (MP4)**](./base-project/out/apple-promo.mp4)
+Este repositório é uma **skill de IA** especializada para orientar modelos de linguagem na criação de motion design de alto nível com **Remotion**. A skill conecta o repertório visual do After Effects com engenharia de vídeo determinística, versionável e orientada por código.
 
 ---
 
-## 🛠 Core Principles (The Translation Layer)
+## Experiência "nível Apple"
 
-We don't just "write code"; we map cinematic ontological concepts to React components:
+Vídeo deve ser tão reproduzível quanto código. O projeto base inclui uma sequência promocional que demonstra princípios centrais de motion design com blur de movimento, física de molas e composição programática.
 
-| AE Concept | Remotion Implementation | Key Tool |
+### Ver o showcase
+- [**Showcase completo da skill (MP4)**](./base-project/out/full-showcase.mp4)
+- [**Promo estilo Apple (MP4)**](./base-project/out/apple-promo.mp4)
+
+---
+
+## Princípios centrais: camada de tradução
+
+Não basta "escrever código": a skill mapeia conceitos cinematográficos e ontológicos para componentes React.
+
+| Conceito no AE | Implementação em Remotion | Ferramenta principal |
 | :--- | :--- | :--- |
-| **Null Objects** | Parent `div` wrappers with `makeTransform` | `@remotion/animation-utils` |
-| **Track Mattes** | `clipPath` or `overflow: hidden` containers | CSS Standard |
+| **Null Objects** | Wrappers `div` pais com `makeTransform` | `@remotion/animation-utils` |
+| **Track Mattes** | `clipPath` ou containers com `overflow: hidden` | CSS padrão |
 | **Wiggle** | `noise2D(seed, frame)` | `@remotion/noise` |
 | **Easy Ease** | `interpolate(f, [range], [output], { easing })` | `Easing.bezier` |
-| **Physics** | `spring({ frame, fps, config })` | Remotion Core |
+| **Física** | `spring({ frame, fps, config })` | Núcleo do Remotion |
 | **Motion Blur** | `<CameraMotionBlur>` | `@remotion/motion-blur` |
 
 ---
 
-## 📥 Getting Started
+## Primeiros passos
 
-### 1. Clone & Install
-```powershell
+### 1. Clonar e instalar
+```bash
 git clone <your-repo-url>
 cd ae-skill/base-project
 npm install
 ```
 
-### 2. Preview & Render
+### 2. Pré-visualização e render
 ```bash
-# Start the Studio
+# Iniciar o Studio
 npm run dev
 
-# Default skill render: RAM frames + Intel VA-API when available
+# Render padrão da skill: frames em RAM + Intel VA-API quando disponível
 npm run render
 
-# CPU fallback
+# Fallback por CPU
 npm run render:cpu
 ```
 
-The default render stores frames in `/dev/shm/remotion-vaapi-*` when RAM-backed storage is available, encodes with FFmpeg `h264_vaapi` using Intel VA-API, then muxes Remotion's mixed AAC timeline audio. See [`base-project/docs/linux-intel-gpu-remotion.md`](./base-project/docs/linux-intel-gpu-remotion.md).
+O render padrão armazena frames em `/dev/shm/remotion-vaapi-*` quando há armazenamento em RAM disponível, codifica com FFmpeg `h264_vaapi` usando Intel VA-API e depois muxa o áudio AAC mixado pelo Remotion. Veja [`base-project/docs/linux-intel-gpu-remotion.md`](./base-project/docs/linux-intel-gpu-remotion.md).
 
-The large PDF knowledge base is converted into searchable Markdown under [`references/knowledge/INDEX.md`](./references/knowledge/INDEX.md). Use `rg` against `references/knowledge` before opening page chunks.
-
----
-
-## 🧠 Why Deterministic Design?
-
-Unlike traditional video files, this project is:
-- **Git-Friendly**: Every frame is a line of code.
-- **Parametric**: Change a color or string, and re-render in seconds.
-- **Zero Drift**: No `Math.random()`. No flickering. Every render is identical.
-- **AI-Native**: Designed specifically for agents to understand and modify.
+A base de conhecimento grande em PDF foi convertida para Markdown pesquisável em [`references/knowledge/INDEX.md`](./references/knowledge/INDEX.md). Use `rg` em `references/knowledge` antes de abrir chunks de página.
 
 ---
 
-## 📜 SkillManifest
+## Por que design determinístico?
 
-The core logic of this agent's brain is stored in [`SKILL.md`](../SKILL.md). It contains the ontological mapping used by the Antigravity agent to generate these animations.
+Diferente de arquivos de vídeo tradicionais, este projeto é:
+
+- **Amigável ao Git**: cada frame nasce de código versionável.
+- **Paramétrico**: altere uma cor ou string e renderize novamente.
+- **Sem drift**: nada de `Math.random()`. Sem flicker. Todo render é reprodutível.
+- **Nativo para IA**: feito para agentes entenderem, modificarem e validarem.
 
 ---
 
-**Built with ☕ and cínismo by [Antigravity](https://github.com/google-deepmind).**
-*"Because if you're still using keyframes manually in 2026, you're the bottleneck."*
+## Manifesto da skill
+
+A lógica central da skill está em [`SKILL.md`](./SKILL.md). O arquivo contém o mapeamento ontológico usado pelo agente para gerar animações em Remotion.
+
+---
+
+**Construído com café e cinismo por [Antigravity](https://github.com/google-deepmind).**
+*"Porque se você ainda está criando keyframes manualmente em 2026, o gargalo é você."*

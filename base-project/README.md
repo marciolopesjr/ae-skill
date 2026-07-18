@@ -1,62 +1,62 @@
-# Remotion video
+# Vídeo em Remotion
 
 <p align="center">
   <a href="https://github.com/remotion-dev/logo">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-dark.apng">
-      <img alt="Animated Remotion Logo" src="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-light.gif">
+      <img alt="Logo animado do Remotion" src="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-light.gif">
     </picture>
   </a>
 </p>
 
-Welcome to your Remotion project!
+Projeto base da AE Skill para criar, pré-visualizar e renderizar composições Remotion.
 
-## Commands
+## Comandos
 
-**Install Dependencies**
+**Instalar dependências**
 
 ```console
 npm i
 ```
 
-**Start Preview**
+**Iniciar pré-visualização**
 
 ```console
 npm run dev
 ```
 
-**Render video**
+**Renderizar vídeo**
 
 ```console
 npm run render
 ```
 
-This is the default AE Skill render path: frames are stored in `/dev/shm/remotion-vaapi-*` when available, encoded with FFmpeg `h264_vaapi`, then muxed with Remotion's mixed AAC timeline audio.
+Este é o caminho de render padrão da AE Skill: os frames são armazenados em `/dev/shm/remotion-vaapi-*` quando disponível, codificados com FFmpeg `h264_vaapi` e muxados com o áudio AAC da timeline mixado pelo Remotion.
 
-**CPU fallback**
+**Fallback por CPU**
 
 ```console
 npm run render:cpu
 ```
 
-**Upgrade Remotion**
+**Atualizar Remotion**
 
 ```console
 npx remotion upgrade
 ```
 
-## Docs
+## Documentação
 
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
+Comece pelo guia de fundamentos do Remotion: [Fundamentos](https://www.remotion.dev/docs/the-fundamentals).
 
-## Help
+## Ajuda
 
-We provide help on our [Discord server](https://discord.gg/6VzzNDwUwV).
+A comunidade do Remotion oferece suporte no [servidor do Discord](https://discord.gg/6VzzNDwUwV).
 
-## Issues
+## Problemas
 
-Found an issue with Remotion? [File an issue here](https://github.com/remotion-dev/remotion/issues/new).
+Encontrou um problema no Remotion? [Abra uma issue aqui](https://github.com/remotion-dev/remotion/issues/new).
 
-## License
+## Licença
 
-Note that for some entities a company license is needed. [Read the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+Algumas entidades precisam de licença comercial. [Leia os termos aqui](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).

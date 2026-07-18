@@ -16,11 +16,11 @@ const TOPIC_GROUPS = [
     keywords: ['After Effects', 'Composition', '<Composition', '<Sequence', 'Pre-composition', 'Null Object'],
   },
   {
-    title: 'Interpolacao, easing e keyframes',
+    title: 'Interpolação, easing e keyframes',
     keywords: ['interpolate', 'Easing', 'Bezier', 'keyframe', 'quadros-chave', 'extrapolate'],
   },
   {
-    title: 'Wiggle, noise e expressoes',
+    title: 'Wiggle, noise e expressões',
     keywords: ['wiggle', 'noise2D', 'noise3D', 'loopOut', 'expressão', 'expressões'],
   },
   {
@@ -32,19 +32,19 @@ const TOPIC_GROUPS = [
     keywords: ['3D', 'WebGL', 'Three', 'React Three Fiber', '@remotion/three', 'OffthreadVideo'],
   },
   {
-    title: 'Audio e visualizacao sonora',
+    title: 'Áudio e visualização sonora',
     keywords: ['Áudio', 'Audio', '<Audio', 'visualizeAudio', 'useAudioData', 'getAudioData'],
   },
   {
-    title: 'JSON, prompts e parametrizacao',
+    title: 'JSON, prompts e parametrização',
     keywords: ['JSON', 'prompt', 'schema', 'defaultProps', 'parametrização', 'paramétrico'],
   },
   {
-    title: 'Renderizacao, Lambda e infraestrutura',
+    title: 'Renderização, Lambda e infraestrutura',
     keywords: ['renderMedia', 'Lambda', 'renderização', 'concurrency', 'infraestrutura', 'servidor'],
   },
   {
-    title: 'Validacao e anti-padroes',
+    title: 'Validação e antipadrões',
     keywords: ['validação', 'anti', 'NUNCA', 'SEMPRE', 'falhas', 'determinística'],
   },
   {
@@ -166,9 +166,9 @@ const writeIndex = ({pages, topics}) => {
   });
 
   const indexBody = [
-    '# Base de conhecimento pesquisavel',
+    '# Base de conhecimento pesquisável',
     '',
-    'Este diretorio substitui a leitura direta do PDF em tarefas normais. Use `rg` primeiro, leia apenas as paginas relevantes e volte ao PDF somente quando precisar conferir layout original.',
+    'Este diretório substitui a leitura direta do PDF em tarefas normais. Use `rg` primeiro, leia apenas as páginas relevantes e volte ao PDF somente quando precisar conferir layout original.',
     '',
     '## Como pesquisar',
     '',
@@ -177,11 +177,11 @@ const writeIndex = ({pages, topics}) => {
     'sed -n \'1,160p\' references/knowledge/pages/page-01.md',
     '```',
     '',
-    '## Indice por topico',
+    '## Índice por tópico',
     '',
     ...topicLines,
     '',
-    '## Paginas',
+    '## Páginas',
     '',
     ...pageLines,
     '',

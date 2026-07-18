@@ -1,17 +1,17 @@
-# Linux Intel GPU Rendering Notes
+# Notas de renderização com GPU Intel no Linux
 
 ## Status
 
-Remotion 4 supports hardware-accelerated encoding on Linux through NVENC, which requires an NVIDIA GPU. Intel integrated GPUs are not supported by Remotion's `--hardware-acceleration` path at the time this note was written.
+O Remotion 4 oferece suporte a encode acelerado por hardware no Linux via NVENC, o que exige GPU NVIDIA. GPUs integradas Intel não são atendidas pelo caminho `--hardware-acceleration` do Remotion no momento em que esta nota foi escrita.
 
-For Intel iGPUs, treat acceleration as two separate concerns:
+Para iGPUs Intel, trate aceleração como duas frentes separadas:
 
-1. Chromium frame rendering: try to use a native OpenGL backend for WebGL-heavy scenes.
-2. FFmpeg encoding: use a separate VA-API or QSV pipeline after Remotion has rendered frames.
+1. Renderização de frames no Chromium: tentar usar um backend OpenGL nativo para cenas pesadas em WebGL.
+2. Encode no FFmpeg: usar um pipeline VA-API ou QSV separado depois que o Remotion renderizar os frames.
 
-## Chromium / WebGL Path
+## Caminho Chromium / WebGL
 
-Use Chrome for Testing and force a Chromium GL backend:
+Use Chrome for Testing e force um backend GL do Chromium:
 
 ```bash
 npx remotion render MasterShowcase out/master-showcase.mp4 \
@@ -21,7 +21,7 @@ npx remotion render MasterShowcase out/master-showcase.mp4 \
   --log=verbose
 ```
 
-If `angle-egl` is unstable on a given Intel driver stack, test these values in order:
+Se `angle-egl` ficar instável em uma pilha de driver Intel específica, teste estes valores em ordem:
 
 ```bash
 --gl=egl
@@ -29,42 +29,42 @@ If `angle-egl` is unstable on a given Intel driver stack, test these values in o
 --gl=vulkan
 ```
 
-Verify with verbose Remotion logs and `intel_gpu_top` while rendering. For browser-level diagnosis outside Remotion, run Chromium or Chrome with the same GL/VA-API flags and inspect `chrome://gpu`.
+Verifique com logs verbosos do Remotion e `intel_gpu_top` durante o render. Para diagnóstico no nível do navegador fora do Remotion, rode Chromium ou Chrome com as mesmas flags GL/VA-API e inspecione `chrome://gpu`.
 
-## Default Skill Render
+## Render padrão da skill
 
-The default render command for this skill is:
+O comando de render padrão desta skill é:
 
 ```bash
 npm run render
 ```
 
-It renders a PNG image sequence via Remotion, stores frames in RAM when `/dev/shm` is writable, encodes the image sequence with FFmpeg VA-API using constant QP mode, then muxes Remotion's mixed AAC audio when the composition has timeline audio.
+Ele renderiza uma sequência de imagens PNG via Remotion, armazena frames em RAM quando `/dev/shm` é gravável, codifica a sequência com FFmpeg VA-API usando modo QP constante e depois muxa o áudio AAC mixado pelo Remotion quando a composição tem áudio na timeline.
 
-## RAM Frame Store
+## Armazenamento de frames em RAM
 
-By default, the script uses:
+Por padrão, o script usa:
 
 ```bash
 /dev/shm/remotion-vaapi-${COMPOSITION}
 ```
 
-If `/dev/shm` is unavailable, it falls back to:
+Se `/dev/shm` não estiver disponível, o fallback é:
 
 ```bash
 out/intel-vaapi-frames-${COMPOSITION}
 ```
 
-For machines with 8 GB RAM, keep frame storage under 2 GB for routine renders and under 3 GB only for controlled benchmarks. Use `KEEP_FRAMES=1` only when debugging or benchmarking; otherwise the script deletes the temporary frames after a successful encode.
+Em máquinas com 8 GB de RAM, mantenha os frames abaixo de 2 GB em renders de rotina e abaixo de 3 GB apenas em benchmarks controlados. Use `KEEP_FRAMES=1` somente para debug ou benchmark; caso contrário, o script apaga os frames temporários após um encode bem-sucedido.
 
-## Intel VA-API Encoding
+## Encode Intel VA-API
 
 ```bash
 chmod +x scripts/render-intel-vaapi-preview.sh
 npm run render
 ```
 
-Useful overrides:
+Overrides úteis:
 
 ```bash
 COMPOSITION=ApplePromo OUTPUT=out/apple-promo-vaapi.mp4 ./scripts/render-intel-vaapi-preview.sh
@@ -74,19 +74,19 @@ FRAME_DIR=/dev/shm/remotion-vaapi-debug KEEP_FRAMES=1 ./scripts/render-intel-vaa
 INCLUDE_AUDIO=0 ./scripts/render-intel-vaapi-preview.sh
 ```
 
-On the local Linux Intel setup tested here, VA-API only accepted CQP for H.264 encode. Bitrate-based options failed with `Driver does not support any RC mode compatible with selected options (supported modes: CQP)`.
+Na máquina Linux Intel testada localmente, VA-API aceitou apenas CQP para encode H.264. Opções baseadas em bitrate falharam com `Driver does not support any RC mode compatible with selected options (supported modes: CQP)`.
 
-## Audio Mixing
+## Mixagem de áudio
 
-The frame render intentionally runs with `--muted`. Audio is rendered as a separate AAC file by `scripts/render-audio.cjs`, which calls Remotion's programmatic `renderMedia({ codec: 'aac' })` API. This keeps Remotion responsible for timeline mixing, including `<Sequence>` offsets, trims, animated volume, playback rate, and multiple audio tracks.
+O render de frames roda intencionalmente com `--muted`. O áudio é renderizado como um arquivo AAC separado por `scripts/render-audio.cjs`, que chama a API programática `renderMedia({ codec: 'aac' })` do Remotion. Assim, o Remotion continua responsável pela mixagem da timeline, incluindo offsets de `<Sequence>`, trims, volume animado, playback rate e múltiplas faixas.
 
-To validate audio mixing without the VA-API video step:
+Para validar a mixagem de áudio sem a etapa de vídeo VA-API:
 
 ```bash
 npm run render:audio -- AudioReactive out/audio-reactive.aac
 ```
 
-The final MP4 is muxed without recompressing either stream:
+O MP4 final é muxado sem recomprimir nenhum dos streams:
 
 ```bash
 ffmpeg -i video-only.mp4 -i mixed.aac \
@@ -95,11 +95,11 @@ ffmpeg -i video-only.mp4 -i mixed.aac \
   out/final.mp4
 ```
 
-Do not mux `public/audio.mp3` directly into `MasterShowcase`: that composition starts the audio-reactive scene later in the timeline. Use `INCLUDE_AUDIO=0` only for video-only benchmarks or intentionally silent renders.
+Não muxe `public/audio.mp3` diretamente em `MasterShowcase`: essa composição inicia a cena reativa a áudio mais tarde na timeline. Use `INCLUDE_AUDIO=0` apenas para benchmarks somente de vídeo ou renders intencionalmente mudos.
 
-## Driver Checks
+## Checagens de driver
 
-Install and run:
+Instale e rode:
 
 ```bash
 vainfo
@@ -107,13 +107,13 @@ ffmpeg -hide_banner -encoders | rg 'h264_vaapi|hevc_vaapi|h264_qsv|hevc_qsv'
 ls -l /dev/dri/renderD*
 ```
 
-For Intel, VA-API generally needs the iHD media driver on newer hardware or the i965 driver on older hardware. FFmpeg can create VA-API devices from a DRM render node such as `/dev/dri/renderD128`; QSV on Linux can derive from VA-API.
+Em Intel, VA-API geralmente precisa do driver de mídia iHD em hardware mais novo ou do driver i965 em hardware mais antigo. O FFmpeg consegue criar devices VA-API a partir de um nó DRM de render, como `/dev/dri/renderD128`; QSV no Linux pode derivar de VA-API.
 
-The Linux user running the render must have permission to open the render node. On many distributions this means membership in the `render` and/or `video` groups, followed by a fresh login session.
+O usuário Linux que roda o render precisa ter permissão para abrir o nó de render. Em muitas distribuições isso significa pertencer aos grupos `render` e/ou `video`, seguido de uma nova sessão de login.
 
-## QSV Variant
+## Variante QSV
 
-If FFmpeg has Intel Quick Sync support, test this encoder after rendering the frame sequence:
+Se o FFmpeg tiver suporte a Intel Quick Sync, teste este encoder depois de renderizar a sequência de frames:
 
 ```bash
 ffmpeg -hide_banner -y \
@@ -126,17 +126,17 @@ ffmpeg -hide_banner -y \
   out/master-showcase-qsv.mp4
 ```
 
-QSV support depends on how FFmpeg was built (`libvpl`/MediaSDK) and on the installed Intel media stack. VA-API is the first Linux Intel path to validate because it is easier to inspect with `vainfo`.
+O suporte a QSV depende de como o FFmpeg foi compilado (`libvpl`/MediaSDK) e da pilha de mídia Intel instalada. VA-API é o primeiro caminho Intel Linux a validar porque é mais fácil de inspecionar com `vainfo`.
 
-## Native Remotion FFmpeg Override
+## Override nativo de FFmpeg no Remotion
 
-Remotion exposes an FFmpeg override hook in renderer APIs, but the official docs warn that this is an unstable escape hatch. Use it only after the frame-sequence pipeline proves that VA-API/QSV is worth the complexity. A direct override must handle both Remotion's encoding and muxing phases and can break on patch-level Remotion updates.
+O Remotion expõe um hook de override do FFmpeg nas APIs de renderer, mas a documentação oficial avisa que isso é uma rota de escape instável. Use somente depois que o pipeline por sequência de frames provar que VA-API/QSV justifica a complexidade. Um override direto precisa lidar com as fases de encode e mux do Remotion e pode quebrar em atualizações de patch do Remotion.
 
-## Sources
+## Fontes
 
-- Remotion hardware acceleration: https://www.remotion.dev/docs/hardware-acceleration
-- Remotion Chromium GL flag: https://www.remotion.dev/docs/chromium-flags
-- Remotion render CLI flags: https://www.remotion.dev/docs/cli/render
-- Chromium VA-API notes: https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/gpu/vaapi.md
-- FFmpeg hardware device options: https://ffmpeg.org/ffmpeg.html
-- Intel Linux media framework guide: https://www.intel.com/content/www/us/en/developer/articles/guide/open-source-media-framework-get-started-guide.html
+- Aceleração por hardware no Remotion: https://www.remotion.dev/docs/hardware-acceleration
+- Flag GL do Chromium no Remotion: https://www.remotion.dev/docs/chromium-flags
+- Flags de render CLI do Remotion: https://www.remotion.dev/docs/cli/render
+- Notas de VA-API no Chromium: https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/gpu/vaapi.md
+- Opções de hardware device do FFmpeg: https://ffmpeg.org/ffmpeg.html
+- Guia Intel Linux Media Framework: https://www.intel.com/content/www/us/en/developer/articles/guide/open-source-media-framework-get-started-guide.html
