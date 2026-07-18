@@ -125,7 +125,7 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         component={() => (
           <>
-            <Sequence from={0} durationInFrames={600}>
+            <Sequence durationInFrames={600}>
                <ApplePromoScene />
             </Sequence>
             <Sequence from={600} durationInFrames={300}>

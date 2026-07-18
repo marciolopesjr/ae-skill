@@ -9,6 +9,28 @@ description: Base de conhecimento ontológica para geração autônoma de vídeo
 
 Você é um **motion designer sênior operando via código**. Seu equivalente humano domina Adobe After Effects, mas você trabalha 100% em React + Remotion. Nunca gere pseudo-código ou explicações — apenas código funcional, renderizável, sem erros de importação.
 
+## 1.1 BASE DE CONHECIMENTO PESQUISÁVEL
+
+Não abra `base_de_conhecimento.pdf` em tarefas normais. A versão pesquisável está em `references/knowledge/` e deve ser acessada por busca incremental:
+
+```bash
+rg -n "termo|outro termo" references/knowledge
+sed -n '1,160p' references/knowledge/pages/page-XX.md
+```
+
+Fluxo obrigatório:
+
+1. Ler `references/knowledge/INDEX.md` somente quando precisar navegar pelo PDF original.
+2. Usar `rg` para localizar conceitos específicos sem carregar o corpus completo.
+3. Abrir apenas as páginas/chunks retornados pela busca.
+4. Voltar ao PDF apenas para conferir layout original, paginação visual ou problema de extração.
+
+Para regenerar a base textual após alterar/substituir o PDF:
+
+```bash
+node scripts/build-knowledge-reference.cjs
+```
+
 ---
 
 ## 2. MAPEAMENTO CONCEITUAL: After Effects → Remotion
@@ -251,7 +273,93 @@ Config.setChromiumOpenGlRenderer('angle');
 
 ---
 
-## 13. ESQUEMA JSON DE COMPOSIÇÃO
+## 13. RENDERIZAÇÃO PADRÃO DA SKILL
+
+O processo padrão desta skill é **renderizar frames em RAM quando possível e codificar com FFmpeg acelerado por GPU Intel VA-API**. Use `npx remotion render` direto apenas como fallback de compatibilidade, smoke test rápido ou quando o host não expõe VA-API/QSV.
+
+### Comando padrão
+
+```bash
+npm run render
+```
+
+No `base-project`, esse comando executa:
+
+```bash
+./scripts/render-intel-vaapi-preview.sh
+```
+
+### Variáveis operacionais
+
+```bash
+COMPOSITION=MasterShowcase          # composição alvo
+OUTPUT=out/master-vaapi.mp4         # arquivo final
+FRAME_DIR=/dev/shm/remotion-vaapi-MasterShowcase
+VAAPI_DEVICE=/dev/dri/renderD128
+VAAPI_QP=20                         # menor = mais qualidade/maior arquivo
+REMOTION_GL=angle-egl               # tente egl, angle ou vulkan se necessário
+KEEP_FRAMES=0                       # 1 preserva frames para debug/benchmark
+INCLUDE_AUDIO=1                     # 1 renderiza e muxa o áudio mixado da timeline
+AUDIO_OUTPUT=/dev/shm/remotion-audio-MasterShowcase.aac
+```
+
+### Regra de mixagem
+
+O pipeline padrão NÃO deve tentar remontar a mixagem manualmente no FFmpeg a partir de arquivos em `public/`. O Remotion deve calcular a timeline de áudio, incluindo `<Sequence>`, trims, volumes por frame e múltiplas faixas.
+
+Fluxo obrigatório:
+
+1. Renderizar frames com `--sequence --muted` para evitar que a etapa visual carregue áudio duas vezes.
+2. Gerar o áudio mixado com `scripts/render-audio.cjs`, que usa `renderMedia({ codec: 'aac' })`.
+3. Muxar o vídeo VA-API e o AAC final com `ffmpeg -c:v copy -c:a copy -shortest`.
+
+Use `INCLUDE_AUDIO=0` somente para benchmarks de vídeo puro ou composições explicitamente mudas.
+
+### Regra de RAM
+
+Se `/dev/shm` existir e for gravável, os frames DEVEM ir para RAM por padrão. Em máquinas com 8 GB de RAM, limite prático recomendado:
+
+- seguro: até 2 GB de frames;
+- agressivo: até 3 GB de frames;
+- nunca usar frames raw longos em RAM.
+
+Estimativa 1080p:
+
+| Formato | Custo típico |
+|---|---|
+| PNG/JPEG comprimido | viável para minutos, depende da cena |
+| RGB raw | ~6.2 MB por frame |
+| RGBA raw | ~8.3 MB por frame |
+
+Para 30 fps, raw 1080p ultrapassa 11 GB por minuto, portanto o pipeline padrão deve usar frames PNG/JPEG e não raw.
+
+### Diagnóstico obrigatório de GPU
+
+Antes de declarar que VA-API não funciona, rode fora de sandbox:
+
+```bash
+vainfo --display drm --device /dev/dri/renderD128
+ffmpeg -hide_banner -encoders | rg 'h264_vaapi|hevc_vaapi|h264_qsv|hevc_qsv'
+```
+
+O encoder Intel testado aceita `h264_vaapi` com `-rc_mode CQP -qp 20`. Se bitrate falhar com erro de rate control, mantenha CQP.
+
+### Fallback CPU
+
+```bash
+npm run render:cpu
+```
+
+Use o fallback CPU somente quando:
+
+- `/dev/dri/renderD*` não existir;
+- `vainfo` falhar fora de sandbox;
+- FFmpeg não expuser `h264_vaapi`/`h264_qsv`;
+- a API programática de áudio do Remotion falhar de forma reprodutível para a composição.
+
+---
+
+## 14. ESQUEMA JSON DE COMPOSIÇÃO
 
 Estrutura para geração autônoma via LLM (evita alucinação de código):
 
@@ -292,7 +400,7 @@ Estrutura para geração autônoma via LLM (evita alucinação de código):
 
 ---
 
-## 14. REGRAS DE VALIDAÇÃO — CHECKLIST PRÉ-OUTPUT
+## 15. REGRAS DE VALIDAÇÃO — CHECKLIST PRÉ-OUTPUT
 
 Antes de gerar qualquer código Remotion, verificar:
 
@@ -304,10 +412,11 @@ Antes de gerar qualquer código Remotion, verificar:
 - [ ] Seeds do `noise2D/noise3D` são strings únicas por propriedade
 - [ ] Imports são do pacote correto (`remotion`, `@remotion/noise`, etc.)
 - [ ] Nenhum `Math.random()` (não-determinístico — quebra renderização frame-a-frame)
+- [ ] Render padrão usa `npm run render` com frames em RAM/VA-API quando disponível; CPU é fallback documentado
 
 ---
 
-## 15. MÓDULOS ESPECIALIZADOS (carregar sob demanda)
+## 16. MÓDULOS ESPECIALIZADOS (carregar sob demanda)
 
 | Domínio | Arquivo | Ativar quando |
 |---|---|---|
@@ -319,7 +428,7 @@ Antes de gerar qualquer código Remotion, verificar:
 
 ---
 
-## 16. ANTI-PADRÕES — NUNCA FAZER
+## 17. ANTI-PADRÕES — NUNCA FAZER
 
 ```tsx
 // ❌ Aleatório não-determinístico
@@ -339,11 +448,14 @@ interpolate(frame, [0, 30], [0, 1]) // sem easing = movimento mecânico
 
 // ❌ spring sem durationInFrames em sequências
 spring({ frame, fps, config: {...} }) // duração imprevisível
+
+// ❌ render CPU como padrão em host Linux Intel com VA-API disponível
+npx remotion render MasterShowcase out/video.mp4
 ```
 
 ---
 
-## 17. TÉCNICAS AVANÇADAS (Sound & Shaders)
+## 18. TÉCNICAS AVANÇADAS (Sound & Shaders)
 
 ### Áudio Reativo
 1. Use `useAudioData(staticFile('audio.mp3'))`.

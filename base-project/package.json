@@ -37,9 +37,14 @@
   },
   "scripts": {
     "dev": "remotion studio",
+    "render": "./scripts/render-intel-vaapi-preview.sh",
+    "render:audio": "node scripts/render-audio.cjs",
+    "render:cpu": "remotion render MasterShowcase out/master-showcase-cpu.mp4 --log=verbose",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc"
+    "lint": "eslint src && tsc",
+    "render:linux-intel-webgl": "remotion render MasterShowcase out/master-showcase.mp4 --chrome-mode=chrome-for-testing --gl=angle-egl --enable-multiprocess-on-linux --log=verbose",
+    "render:linux-intel-vaapi-preview": "./scripts/render-intel-vaapi-preview.sh"
   },
   "sideEffects": [
     "*.css"

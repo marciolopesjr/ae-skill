@@ -18,7 +18,7 @@ export const NullObjectScene: React.FC = () => {
             translateX(panX),
             translateY(panY),
             scale(zoom),
-            rotate(angle + 'deg'),
+            rotate(angle, 'deg'),
           ]),
           justifyContent: 'center', 
           alignItems: 'center'

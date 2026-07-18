@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { Canvas } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, Sphere, ContactShadows } from '@react-three/drei';
 

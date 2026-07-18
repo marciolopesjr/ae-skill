@@ -45,13 +45,20 @@ npm install
 ```
 
 ### 2. Preview & Render
-```powershell
+```bash
 # Start the Studio
-npm start
+npm run dev
 
-# Render the showcase
-npx remotion render MasterShowcase out/showcase.mp4
+# Default skill render: RAM frames + Intel VA-API when available
+npm run render
+
+# CPU fallback
+npm run render:cpu
 ```
+
+The default render stores frames in `/dev/shm/remotion-vaapi-*` when RAM-backed storage is available, encodes with FFmpeg `h264_vaapi` using Intel VA-API, then muxes Remotion's mixed AAC timeline audio. See [`base-project/docs/linux-intel-gpu-remotion.md`](./base-project/docs/linux-intel-gpu-remotion.md).
+
+The large PDF knowledge base is converted into searchable Markdown under [`references/knowledge/INDEX.md`](./references/knowledge/INDEX.md). Use `rg` against `references/knowledge` before opening page chunks.
 
 ---
 

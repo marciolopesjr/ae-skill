@@ -28,7 +28,15 @@ npm run dev
 **Render video**
 
 ```console
-npx remotion render
+npm run render
+```
+
+This is the default AE Skill render path: frames are stored in `/dev/shm/remotion-vaapi-*` when available, encoded with FFmpeg `h264_vaapi`, then muxed with Remotion's mixed AAC timeline audio.
+
+**CPU fallback**
+
+```console
+npm run render:cpu
 ```
 
 **Upgrade Remotion**
